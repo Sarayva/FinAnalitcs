@@ -97,13 +97,30 @@ html_top = """<!DOCTYPE html>
             --bg-dark: #121212; --glass-bg: rgba(30, 30, 30, 0.7); --glass-border: rgba(255, 255, 255, 0.08);
             --primary: #ffffff; --primary-hover: #d1d1d1; --success: #4caf50; --danger: #f44336; --warning: #ff9800;
             --text-main: #ffffff; --text-muted: #8a8a8a;
+            --card-bg: rgba(30, 30, 30, 0.95);
+            --sidebar-bg: rgba(20, 20, 20, 0.95);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --modal-bg: #1e293b;
+            --row-hover: rgba(255, 255, 255, 0.02);
+            --chart-title: #f1f5f9;
+        }
+        body.light-theme {
+            --bg-dark: #f1f5f9; --glass-bg: rgba(255, 255, 255, 0.9); --glass-border: rgba(0, 0, 0, 0.1);
+            --primary: #1e293b; --primary-hover: #0f172a; --success: #4caf50; --danger: #f44336; --warning: #ff9800;
+            --text-main: #1e293b; --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --sidebar-bg: #ffffff;
+            --input-bg: rgba(0, 0, 0, 0.03);
+            --modal-bg: #ffffff;
+            --row-hover: rgba(0, 0, 0, 0.04);
+            --chart-title: #334155;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'JetBrains Mono', 'Consolas', monospace; }
         body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; position: relative; }
         .background-animation { display: none; }
         .app-container { display: flex; width: 100vw; height: 100vh; background: transparent; overflow: hidden; }
         
-        .sidebar { width: 250px; background: rgba(20, 20, 20, 0.95); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; }
+        .sidebar { width: 250px; background: var(--sidebar-bg); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; }
         .brand { display: flex; align-items: center; gap: 12px; padding: 2rem 1.5rem 1rem; }
         .brand i { font-size: 24px; color: var(--primary); } .brand h1 { font-size: 1.2rem; font-weight: 600; line-height:1.1; }
         .nav-tabs { display: flex; flex-direction: column; gap: 5px; padding: 1rem; border-bottom: 1px solid var(--glass-border); }
@@ -114,9 +131,9 @@ html_top = """<!DOCTYPE html>
         .months-selector { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .months-selector h3 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 1rem; }
         
-        .styled-select { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: white; padding: 12px 14px; border-radius: 8px; font-size: 0.95rem; outline: none; cursor: pointer; transition: 0.2s; width: 100%; font-family: 'JetBrains Mono', 'Consolas', monospace; }
+        .styled-select { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-main); padding: 12px 14px; border-radius: 8px; font-size: 0.95rem; outline: none; cursor: pointer; transition: 0.2s; width: 100%; font-family: 'JetBrains Mono', 'Consolas', monospace; }
         .styled-select:hover, .styled-select:focus { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
-        .styled-select option { background: var(--bg-dark); color: white; font-family: 'Inter', sans-serif; font-size: 14px; }
+        .styled-select option { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 14px; }
         
         .sidebar-actions { padding: 1.5rem; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--glass-border); }
 
@@ -125,12 +142,12 @@ html_top = """<!DOCTYPE html>
         .view.active-view { display: flex; flex-direction: column; gap: 1.5rem; }
         
         .main-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .main-header h2 { font-size: 1.8rem; font-weight: 700; color: white; } .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
+        .main-header h2 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); } .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
         .header-actions { display: flex; gap: 10px; }
 
         /* Dashboard Grid Layout (Mirrors the provided screenshot) */
         .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(130px, auto); gap: 1rem; }
-        .glass-card { background: rgba(30, 30, 30, 0.95); border: 1px solid var(--glass-border); border-radius: 12px; }
+        .glass-card { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 12px; }
         
         .dash-metric { padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; }
         .dash-metric h3 { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
@@ -138,7 +155,7 @@ html_top = """<!DOCTYPE html>
         .saldo-color { color: #60a5fa; } .despesa-color { color: #f87171; }
         
         .chart-wrapper { padding: 1rem; display: flex; flex-direction: column; position: relative; }
-        .chart-wrapper h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0px; margin-left: 10px; margin-top: 10px; color: #f1f5f9; }
+        .chart-wrapper h3 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0px; margin-left: 10px; margin-top: 10px; color: var(--chart-title); }
         
         .col-span-1 { grid-column: span 1; } .col-span-2 { grid-column: span 2; }
         .row-span-1 { grid-row: span 1; } .row-span-2 { grid-row: span 2; }
@@ -146,13 +163,13 @@ html_top = """<!DOCTYPE html>
         /* Lancamentos View (Current Tables) */
         .dashboard-cards-linear { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom:1rem; }
         .linear-card { display: flex; align-items: center; gap: 1rem; padding: 1.2rem; }
-        .linear-card i { font-size: 1.4rem; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.05); }
+        .linear-card i { font-size: 1.4rem; padding: 12px; border-radius: 10px; background: var(--input-bg); }
         .linear-val h3 { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
         .linear-val p { font-size: 1.4rem; font-weight: 700; }
         
         table { width: 100%; border-collapse: collapse; } th { text-align: left; padding: 1rem; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid var(--glass-border); }
         td { padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.02); vertical-align: middle; font-size: 0.95rem; } 
-        tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+        tbody tr:hover { background: var(--row-hover); }
         tfoot td { border-top: 2px solid var(--glass-border); border-bottom: none; font-size: 1.1rem; padding-top: 1.2rem; }
         
         .status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
@@ -160,29 +177,29 @@ html_top = """<!DOCTYPE html>
         .status-pendente { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
         
         .action-btn { padding: 10px 16px; border-radius: 8px; font-weight: 500; font-size:0.9rem; cursor: pointer; transition: all 0.2s; border: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
-        .primary-btn { background: rgba(255, 255, 255, 0.1); color: white; box-shadow: none; border: 1px solid var(--glass-border); } .primary-btn:hover { background: rgba(255, 255, 255, 0.15); transform: none; }
-        .outline-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; } .outline-btn:hover { background: rgba(255,255,255,0.1); }
+        .primary-btn { background: var(--input-bg); color: var(--text-main); box-shadow: none; border: 1px solid var(--glass-border); } .primary-btn:hover { background: rgba(255, 255, 255, 0.15); transform: none; }
+        .outline-btn { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-main); } .outline-btn:hover { background: var(--row-hover); }
         .icon-btn { background: transparent; border: none; color: var(--text-muted); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .icon-btn:hover { background: rgba(255,255,255,0.1); color: white; } .icon-btn.delete:hover { color: var(--danger); }
+        .icon-btn:hover { background: var(--input-bg); color: var(--text-main); } .icon-btn.delete:hover { color: var(--danger); }
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { opacity: 0; pointer-events: none; }
-        .modal { width: 90%; max-width: 420px; background: #1e293b; padding: 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); transform: translateY(0); transition: 0.3s; }
+        .modal { width: 90%; max-width: 420px; background: var(--modal-bg); padding: 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); transform: translateY(0); transition: 0.3s; }
         .modal-overlay.hidden .modal { transform: translateY(20px); }
         .modal-header { padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
         .close-modal { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
         .modal-body { padding: 1.2rem; display: flex; flex-direction: column; gap: 12px; } .modal-body label { font-size: 0.85rem; color: var(--text-muted); }
-        .input-field { width: 100%; padding: 10px 12px; border-radius: 6px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; font-size: 0.95rem; outline: none; }
+        .input-field { width: 100%; padding: 10px 12px; border-radius: 6px; background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-main); font-size: 0.95rem; outline: none; }
         .input-field:focus { border-color: var(--primary); }
         .checkbox-container { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 5px; font-size: 0.9rem; }
         .modal-footer { padding: 1.2rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: flex-end; }
         
         /* ApexCharts Dark Theme overrides */
-        .apexcharts-tooltip, .apexcharts-tooltip-title { background: #1e293b !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; font-family: 'Inter', sans-serif !important; }
+        .apexcharts-tooltip, .apexcharts-tooltip-title { background: var(--modal-bg) !important; border: 1px solid var(--glass-border) !important; color: var(--text-main) !important; font-family: 'Inter', sans-serif !important; }
         .apexcharts-legend-text { color: var(--text-muted) !important; }
         
-        .inline-val-input { background: transparent; border: 1px solid transparent; color: white; font-size: 0.95rem; font-weight: 600; width: 100px; padding: 4px 8px; outline: none; border-radius: 4px; transition: 0.2s; text-align: right; }
-        .inline-val-input:focus, .inline-val-input:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+        .inline-val-input { background: transparent; border: 1px solid transparent; color: var(--text-main); font-size: 0.95rem; font-weight: 600; width: 100px; padding: 4px 8px; outline: none; border-radius: 4px; transition: 0.2s; text-align: right; }
+        .inline-val-input:focus, .inline-val-input:hover { background: var(--input-bg); border-color: rgba(255,255,255,0.2); }
         .inline-val-container { display: flex; align-items: center; gap: 4px; justify-content: flex-start; }
 
         ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
@@ -194,9 +211,12 @@ html_top = """<!DOCTYPE html>
     <div class="app-container">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="brand">
-                <i class="fa-solid fa-chart-pie" style="font-size:28px;"></i>
-                <h1>Dashboard<br><span style="font-size:0.8rem; font-weight:400; color:var(--text-muted);">Finanças Pessoais</span></h1>
+            <div class="brand" style="display:flex; justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap: 12px;">
+                    <i class="fa-solid fa-chart-pie" style="font-size:28px;"></i>
+                    <h1>Dashboard<br><span style="font-size:0.8rem; font-weight:400; color:var(--text-muted);">Finanças Pessoais</span></h1>
+                </div>
+                <button id="theme-toggle" class="icon-btn"><i class="fa-solid fa-sun"></i></button>
             </div>
             
             <div class="nav-tabs">
@@ -335,9 +355,24 @@ html_top = """<!DOCTYPE html>
     
     <div id="modal-account" class="modal-overlay hidden">
         <div class="modal">
-            <div class="modal-header"><h3>Editar Nome</h3><button class="close-modal" id="close-modal-account"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="modal-header"><h3 id="modal-acc-title">Conta</h3><button class="close-modal" id="close-modal-account"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="modal-body">
-                <label>Nome da Conta:</label><input type="text" id="acc-name" class="input-field">
+                <div>
+                    <label>Nome / Descrição:</label><input type="text" id="acc-name" class="input-field" placeholder="Ex: IPVA, C6 Bank...">
+                </div>
+                
+                <div id="acc-val-container">
+                    <label>Valor (R$):</label><input type="number" step="0.01" id="acc-val" class="input-field" placeholder="0.00">
+                </div>
+
+                <div id="acc-parcelas-container" style="margin-top:10px;">
+                    <label class="checkbox-container" style="user-select:none; margin-bottom:5px;">
+                        <input type="checkbox" id="acc-is-parcelado"> É uma compra parcelada?
+                    </label>
+                    <div id="parcelas-config" style="display:none; gap:10px; margin-top:10px;">
+                        <div style="flex:1;"><label>Quantidade de Parcelas:</label><input type="number" id="acc-parc-total" class="input-field" value="2" min="2"></div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer"><button class="action-btn primary-btn" id="save-account-btn">Confirmar</button></div>
         </div>
@@ -354,6 +389,10 @@ js_script = f"""
         const DATA_KEY = "gestao_contas_data_v2";
         const RENDAS_KEY = "gestao_rendas_v2";
         
+        if (localStorage.getItem("theme") === "light") {{
+            document.body.classList.add("light-theme");
+        }}
+
         let appData = {json_data}; 
         let appRendas = {json_rendas_data};
         let availableMonths = Object.keys(appData).sort().reverse();
@@ -371,7 +410,16 @@ js_script = f"""
         let currentMonth = null;
         let editingAccountId = null;
         
-        const formatCurrency = (val) => val.toLocaleString("pt-BR", {{style: "currency", currency: "BRL"}});
+        function showModal(id) {{
+            const m = document.getElementById(id);
+            if(m) m.classList.remove('hidden');
+        }}
+        function closeModal(id) {{
+            const m = document.getElementById(id);
+            if(m) m.classList.add('hidden');
+        }}
+        
+        const formatCurrency = (val) => Number(val).toLocaleString("pt-BR", {{style: "currency", currency: "BRL"}});
         const formatMonthString = (yyyyMm) => {{
             const [y, m] = yyyyMm.split("-");
             return new Date(y, parseInt(m)-1, 1).toLocaleDateString("pt-BR", {{month: 'long', year: 'numeric'}}).toUpperCase();
@@ -410,16 +458,18 @@ js_script = f"""
             }}
         }}
         
-        const commonOptions = {{
-            chart: {{ background: 'transparent', toolbar: {{ show: false }}, fontFamily: "'JetBrains Mono', Consolas, monospace" }},
-            theme: {{ mode: 'dark' }},
-            dataLabels: {{ enabled: false }},
-            stroke: {{ curve: 'smooth' }},
-            tooltip: {{ y: {{ formatter: (val) => formatCurrency(val) }} }}
-        }};
 
         function renderDashboard(monthKey) {{
             if(!monthKey) return;
+            
+            const commonOptions = {{
+                chart: {{ background: 'transparent', toolbar: {{ show: false }}, fontFamily: "'JetBrains Mono', Consolas, monospace" }},
+                theme: {{ mode: document.body.classList.contains('light-theme') ? 'light' : 'dark' }},
+                dataLabels: {{ enabled: false }},
+                stroke: {{ curve: 'smooth' }},
+                tooltip: {{ y: {{ formatter: (val) => formatCurrency(val) }} }}
+            }};
+
             const yearStr = monthKey.split("-")[0];
             document.getElementById("dash-subtitle").textContent = "Visão estratégica de " + formatMonthString(monthKey);
             
@@ -440,7 +490,7 @@ js_script = f"""
             const mData = mCats.map(c => catMonthSum[c]);
             const mColors = mCats.map(c => catColors[c] || catColors["Outros"]);
             
-            initGlobalChart("chart-donut-mes", {{ ...commonOptions, series: mData, labels: mCats, colors: mColors, chart: {{ type: 'donut', height: 260 }}, plotOptions: {{ pie: {{ donut: {{ size: '70%', labels: {{ show:true, name: {{show:true}}, value: {{show:true, formatter: (val) => "R$ " + parseInt(val) }} }} }} }} }} }});
+            initGlobalChart("chart-donut-mes", {{ ...commonOptions, series: mData, labels: mCats, colors: mColors, chart: {{ type: 'donut', height: 260 }}, plotOptions: {{ pie: {{ donut: {{ size: '70%', labels: {{ show:true, name: {{show:true}}, value: {{show:true, formatter: (val) => formatCurrency(val) }} }} }} }} }} }});
 
             // Year Aggregation
             let curYearObj = {{}};
@@ -469,7 +519,7 @@ js_script = f"""
             const yCats = Object.keys(catYearSum).sort((a,b) => catYearSum[b] - catYearSum[a]);
             const yData = yCats.map(c => catYearSum[c]);
             const yColors = yCats.map(c => catColors[c] || catColors["Outros"]);
-            initGlobalChart("chart-donut-ano", {{ ...commonOptions, series: yData, labels: yCats, colors: yColors, chart: {{ type: 'donut', height: 260 }}, plotOptions: {{ pie: {{ donut: {{ size: '70%', labels: {{ show:true, name: {{show:true}}, value: {{show:true, formatter: (val) => "R$ " + parseInt(val) }} }} }} }} }} }});
+            initGlobalChart("chart-donut-ano", {{ ...commonOptions, series: yData, labels: yCats, colors: yColors, chart: {{ type: 'donut', height: 260 }}, plotOptions: {{ pie: {{ donut: {{ size: '70%', labels: {{ show:true, name: {{show:true}}, value: {{show:true, formatter: (val) => formatCurrency(val) }} }} }} }} }} }});
             
             // Year Bar Chart (Analise)
             initGlobalChart("chart-analise", {{ ...commonOptions, series: [ {{name: 'Receita', data: histRendas}}, {{name: 'Despesa', data: histDespesas}} ], chart: {{ type: 'bar', height: 280, toolbar: {{show:false}} }}, xaxis: {{ categories: monthLabels }}, colors: ['#0078D4', '#E81123'], plotOptions: {{ bar: {{ borderRadius: 4, columnWidth: '50%' }} }} }});
@@ -535,7 +585,7 @@ js_script = f"""
                     <td>
                         <div class="inline-val-container">
                             <span style="color:var(--text-muted); font-size:0.85rem;">R$</span>
-                            <input type="number" step="0.01" class="inline-val-input" data-id="${{acc.id}}" value="${{acc.value}}">
+                            <input type="text" class="inline-val-input" data-id="${{acc.id}}" value="${{acc.value.toLocaleString('pt-BR', {{minimumFractionDigits:2, maximumFractionDigits:2}})}}">
                         </div>
                     </td>
                     <td><span class="status-badge ${{acc.ok ? 'status-ok' : 'status-pendente'}}"><i class="fa-solid ${{acc.ok ? 'fa-check' : 'fa-clock'}}"></i> ${{acc.ok ? 'OK' : 'Pendente'}}</span></td>
@@ -551,7 +601,11 @@ js_script = f"""
             const inputs = document.querySelectorAll(".inline-val-input");
             inputs.forEach((inp, i) => {{
                 inp.addEventListener("blur", (e) => {{
-                    const val = parseFloat(e.target.value) || 0;
+                    let str = e.target.value;
+                    let numStr = str.replace(/\./g, "").replace(",", ".");
+                    const val = parseFloat(numStr) || 0;
+                    e.target.value = val.toLocaleString("pt-BR", {{minimumFractionDigits:2, maximumFractionDigits:2}});
+                    
                     const id = parseInt(e.target.dataset.id);
                     const acc = appData[currentMonth].find(x => x.id === id);
                     if(acc && acc.value !== val) {{
@@ -634,6 +688,19 @@ js_script = f"""
         }}
 
         function setupEventListeners() {{
+            const themeToggle = document.getElementById("theme-toggle");
+            const icon = themeToggle.querySelector("i");
+            if (localStorage.getItem("theme") === "light") {{
+                icon.className = "fa-solid fa-moon";
+            }}
+            themeToggle.onclick = () => {{
+                document.body.classList.toggle("light-theme");
+                const isLight = document.body.classList.contains("light-theme");
+                localStorage.setItem("theme", isLight ? "light" : "dark");
+                icon.className = isLight ? "fa-solid fa-moon" : "fa-solid fa-sun";
+                renderAll();
+            }};
+            
             document.querySelectorAll(".nav-tab").forEach(btn => {{
                 btn.onclick = () => {{
                     document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
@@ -667,21 +734,69 @@ js_script = f"""
                 switchMonth(e.target.value);
             }});
 
+            document.getElementById("acc-is-parcelado").onchange = (e) => {{
+                document.getElementById("parcelas-config").style.display = e.target.checked ? "flex" : "none";
+            }};
+
             document.getElementById("new-account-btn").onclick = () => {{
                 editingAccountId = null;
-                const n = prompt("Nome da nova conta:");
-                if(n) {{
-                    appData[currentMonth].push({{id: Date.now(), name: n.toUpperCase(), value: 0, ok: false}});
-                    saveData();
-                }}
+                document.getElementById("modal-acc-title").textContent = "Lançar Conta";
+                document.getElementById("acc-name").value = "";
+                document.getElementById("acc-val").value = "";
+                document.getElementById("acc-val-container").style.display = "block";
+                document.getElementById("acc-parcelas-container").style.display = "block";
+                document.getElementById("acc-is-parcelado").checked = false;
+                document.getElementById("parcelas-config").style.display = "none";
+                document.getElementById("acc-parc-total").value = "2";
+                showModal("modal-account");
             }};
+            
             document.getElementById("close-modal-account").onclick = () => closeModal("modal-account");
+            
             document.getElementById("save-account-btn").onclick = () => {{
-                const n = document.getElementById("acc-name").value.toUpperCase();
+                const n = document.getElementById("acc-name").value.trim().toUpperCase();
+                let vStr = document.getElementById("acc-val").value;
+                const v = parseFloat(vStr.replace(',', '.')) || 0;
                 if(!n) return;
+                
                 if(editingAccountId) {{
                     const a = appData[currentMonth].find(x => x.id === editingAccountId);
                     if(a) {{ a.name = n; }}
+                }} else {{
+                    const isParc = document.getElementById("acc-is-parcelado").checked;
+                    if(isParc) {{
+                        let i = 1;
+                        let total = parseInt(document.getElementById("acc-parc-total").value) || 2;
+                        if (total >= 2) {{
+                            let parts = currentMonth.split("-");
+                            let year = parseInt(parts[0]);
+                            let month = parseInt(parts[1]);
+                            
+                            let parcValue = Math.round((v / total) * 100) / 100;
+                            let remaining = v;
+                            const groupId = Date.now();
+                            for (let parc = i; parc <= total; parc++) {{
+                                let currVal = (parc === total) ? Math.round(remaining * 100) / 100 : parcValue;
+                                remaining -= currVal;
+                                
+                                const mStr = year.toString() + "-" + month.toString().padStart(2, '0');
+                                if (!appData[mStr]) appData[mStr] = [];
+                                appData[mStr].push({{
+                                    id: Date.now() + parc,
+                                    groupId: groupId,
+                                    name: n + " " + parc + "/" + total,
+                                    value: currVal,
+                                    ok: false
+                                }});
+                                month++;
+                                if (month > 12) {{ month = 1; year++; }}
+                            }}
+                            availableMonths = Object.keys(appData).sort().reverse();
+                            renderMonthList();
+                        }}
+                    }} else {{
+                        appData[currentMonth].push({{id: Date.now(), name: n, value: v, ok: false}});
+                    }}
                 }}
                 saveData(); closeModal("modal-account");
             }};
@@ -690,14 +805,40 @@ js_script = f"""
                 const a = appData[currentMonth].find(x => x.id === id);
                 if(!a) return;
                 editingAccountId = id;
+                document.getElementById("modal-acc-title").textContent = "Editar Nome";
                 document.getElementById("acc-name").value = a.name;
+                document.getElementById("acc-val-container").style.display = "none";
+                document.getElementById("acc-parcelas-container").style.display = "none";
                 showModal("modal-account");
             }};
             
             window.deleteAccount = (id) => {{
-                if(confirm("Excluir?")) {{
-                    appData[currentMonth] = appData[currentMonth].filter(x => x.id !== id);
-                    saveData();
+                const accToDelete = appData[currentMonth].find(x => x.id === id);
+                if(!accToDelete) return;
+
+                const isInstallment = accToDelete.groupId || / \d+\/\d+$/.test(accToDelete.name);
+
+                if (isInstallment) {{
+                    if(confirm("Esta é uma compra parcelada.\n\nDeseja excluir TODAS as parcelas dela em todos os meses?")) {{
+                        const baseName = accToDelete.name.replace(/ \d+\/\d+$/, '');
+                        
+                        Object.keys(appData).forEach(mStr => {{
+                            appData[mStr] = appData[mStr].filter(x => {{
+                                if (accToDelete.groupId && x.groupId === accToDelete.groupId) return false;
+                                if (!accToDelete.groupId && x.name.startsWith(baseName) && / \d+\/\d+$/.test(x.name)) return false;
+                                return x.id !== id;
+                            }});
+                        }});
+                        saveData();
+                    }} else if (confirm("Neste caso, deseja excluir APENAS esta parcela do mês atual?")) {{
+                         appData[currentMonth] = appData[currentMonth].filter(x => x.id !== id);
+                         saveData();
+                    }}
+                }} else {{
+                    if(confirm("Excluir?")) {{
+                        appData[currentMonth] = appData[currentMonth].filter(x => x.id !== id);
+                        saveData();
+                    }}
                 }}
             }};
             
