@@ -75,7 +75,9 @@ for sheet_name in ['2025', '2026']:
                     "id": account_id,
                     "name": conta,
                     "value": round(float(valor), 2),
-                    "ok": is_ok
+                    "ok": is_ok,
+                    "isBoleto": False,
+                    "dueDay": None
                 }
                 app_data[month_str].append(account)
 
@@ -361,11 +363,20 @@ html_top = """<!DOCTYPE html>
                     <label>Nome / Descrição:</label><input type="text" id="acc-name" class="input-field" placeholder="Ex: IPVA, C6 Bank...">
                 </div>
                 
-                <div id="acc-val-container">
-                    <label>Valor (R$):</label><input type="number" step="0.01" id="acc-val" class="input-field" placeholder="0.00">
+                <div id="acc-val-container" style="display:flex; gap:10px; margin-top:5px;">
+                    <div style="flex:1;">
+                        <label>Valor (R$):</label><input type="number" step="0.01" id="acc-val" class="input-field" placeholder="0.00">
+                    </div>
+                </div>
+                
+                <div style="margin-top:5px;">
+                    <label>Dia Venc. (Opcional):</label><input type="number" id="acc-due-day" class="input-field" placeholder="Ex: 5" min="1" max="31">
                 </div>
 
                 <div id="acc-parcelas-container" style="margin-top:10px;">
+                    <label class="checkbox-container" style="user-select:none; margin-bottom:5px;">
+                        <input type="checkbox" id="acc-is-boleto"> É Boleto?
+                    </label>
                     <label class="checkbox-container" style="user-select:none; margin-bottom:5px;">
                         <input type="checkbox" id="acc-is-parcelado"> É uma compra parcelada?
                     </label>
@@ -577,10 +588,15 @@ js_script = f"""
                 const cat = getCategory(acc.name);
                 const color = catColors[cat] || catColors["Outros"];
                 const tr = document.createElement("tr");
-                const v = acc.value.toString().replace('.', ',');
                 
                 tr.innerHTML = `
-                    <td><strong>${{acc.name}}</strong></td>
+                    <td>
+                        <strong>${{acc.name}}</strong>
+                        <div style="display:flex; gap:6px; margin-top:4px;">
+                            ${{acc.isBoleto ? '<span style="font-size:0.7rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;"><i class="fa-solid fa-barcode"></i> Boleto</span>' : ''}}
+                            ${{acc.dueDay ? `<span style="font-size:0.7rem; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;"><i class="fa-solid fa-calendar-day"></i> Dia ${{acc.dueDay}}</span>` : ''}}
+                        </div>
+                    </td>
                     <td><span style="padding:4px 8px; border-radius:6px; font-size:0.75rem; background:${{color}}20; color:${{color}}; font-weight:600;">${{cat}}</span></td>
                     <td>
                         <div class="inline-val-container">
@@ -743,8 +759,11 @@ js_script = f"""
                 document.getElementById("modal-acc-title").textContent = "Lançar Conta";
                 document.getElementById("acc-name").value = "";
                 document.getElementById("acc-val").value = "";
-                document.getElementById("acc-val-container").style.display = "block";
+                document.getElementById("acc-due-day").value = "";
+                document.getElementById("acc-is-boleto").checked = false;
+                document.getElementById("acc-val-container").style.display = "flex";
                 document.getElementById("acc-parcelas-container").style.display = "block";
+                document.getElementById("acc-is-parcelado").parentElement.style.display = "block";
                 document.getElementById("acc-is-parcelado").checked = false;
                 document.getElementById("parcelas-config").style.display = "none";
                 document.getElementById("acc-parc-total").value = "2";
@@ -757,11 +776,19 @@ js_script = f"""
                 const n = document.getElementById("acc-name").value.trim().toUpperCase();
                 let vStr = document.getElementById("acc-val").value;
                 const v = parseFloat(vStr.replace(',', '.')) || 0;
+                let ddStr = document.getElementById("acc-due-day").value;
+                let dd = ddStr ? parseInt(ddStr) : null;
+                const isB = document.getElementById("acc-is-boleto").checked;
+                
                 if(!n) return;
                 
                 if(editingAccountId) {{
                     const a = appData[currentMonth].find(x => x.id === editingAccountId);
-                    if(a) {{ a.name = n; }}
+                    if(a) {{ 
+                        a.name = n;
+                        a.dueDay = dd;
+                        a.isBoleto = isB;
+                    }}
                 }} else {{
                     const isParc = document.getElementById("acc-is-parcelado").checked;
                     if(isParc) {{
@@ -786,7 +813,9 @@ js_script = f"""
                                     groupId: groupId,
                                     name: n + " " + parc + "/" + total,
                                     value: currVal,
-                                    ok: false
+                                    ok: false,
+                                    isBoleto: isB,
+                                    dueDay: dd
                                 }});
                                 month++;
                                 if (month > 12) {{ month = 1; year++; }}
@@ -795,7 +824,7 @@ js_script = f"""
                             renderMonthList();
                         }}
                     }} else {{
-                        appData[currentMonth].push({{id: Date.now(), name: n, value: v, ok: false}});
+                        appData[currentMonth].push({{id: Date.now(), name: n, value: v, ok: false, isBoleto: isB, dueDay: dd}});
                     }}
                 }}
                 saveData(); closeModal("modal-account");
@@ -805,42 +834,48 @@ js_script = f"""
                 const a = appData[currentMonth].find(x => x.id === id);
                 if(!a) return;
                 editingAccountId = id;
-                document.getElementById("modal-acc-title").textContent = "Editar Nome";
+                document.getElementById("modal-acc-title").textContent = "Editar Conta";
                 document.getElementById("acc-name").value = a.name;
+                document.getElementById("acc-due-day").value = a.dueDay || "";
+                document.getElementById("acc-is-boleto").checked = !!a.isBoleto;
                 document.getElementById("acc-val-container").style.display = "none";
-                document.getElementById("acc-parcelas-container").style.display = "none";
+                document.getElementById("acc-parcelas-container").style.display = "block";
+                document.getElementById("acc-is-parcelado").parentElement.style.display = "none";
+                document.getElementById("parcelas-config").style.display = "none";
                 showModal("modal-account");
             }};
             
-            window.deleteAccount = (id) => {{
+            window.deleteAccount = (id) => {
                 const accToDelete = appData[currentMonth].find(x => x.id === id);
                 if(!accToDelete) return;
 
                 const isInstallment = accToDelete.groupId || / \d+\/\d+$/.test(accToDelete.name);
 
-                if (isInstallment) {{
-                    if(confirm("Esta é uma compra parcelada.\n\nDeseja excluir TODAS as parcelas dela em todos os meses?")) {{
+                if (isInstallment) {
+                    if(confirm("Esta é uma compra parcelada.\n\nDeseja excluir a partir deste mês (apagando esta e as parcelas futuras)?")) {
                         const baseName = accToDelete.name.replace(/ \d+\/\d+$/, '');
                         
-                        Object.keys(appData).forEach(mStr => {{
-                            appData[mStr] = appData[mStr].filter(x => {{
-                                if (accToDelete.groupId && x.groupId === accToDelete.groupId) return false;
-                                if (!accToDelete.groupId && x.name.startsWith(baseName) && / \d+\/\d+$/.test(x.name)) return false;
-                                return x.id !== id;
-                            }});
-                        }});
+                        Object.keys(appData).forEach(mStr => {
+                            if (mStr >= currentMonth) {
+                                appData[mStr] = appData[mStr].filter(x => {
+                                    if (accToDelete.groupId && x.groupId === accToDelete.groupId) return false;
+                                    if (!accToDelete.groupId && x.name.startsWith(baseName) && / \d+\/\d+$/.test(x.name)) return false;
+                                    return x.id !== id;
+                                });
+                            }
+                        });
                         saveData();
-                    }} else if (confirm("Neste caso, deseja excluir APENAS esta parcela do mês atual?")) {{
+                    } else if (confirm("Neste caso, deseja excluir APENAS esta parcela do mês atual?")) {
                          appData[currentMonth] = appData[currentMonth].filter(x => x.id !== id);
                          saveData();
-                    }}
-                }} else {{
-                    if(confirm("Excluir?")) {{
+                    }
+                } else {
+                    if(confirm("Excluir?")) {
                         appData[currentMonth] = appData[currentMonth].filter(x => x.id !== id);
                         saveData();
-                    }}
-                }}
-            }};
+                    }
+                }
+            };
             
             window.toggleStatus = (id) => {{
                 const a = appData[currentMonth].find(x => x.id === id);
@@ -874,7 +909,6 @@ js_script = f"""
 </html>
 """
 
-os.makedirs(r'c:\Users\Usuario\Desktop\contas mensais\app', exist_ok=True)
-with codecs.open(r'c:\Users\Usuario\Desktop\contas mensais\app\index.html', 'w', 'utf-8') as f:
+with codecs.open(r'c:\Users\Usuario\Desktop\contas mensais\index.html', 'w', 'utf-8') as f:
     f.write(html_top + js_script)
 print("Build Complete")

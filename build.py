@@ -148,7 +148,7 @@ html_top = """<!DOCTYPE html>
     <script>
 """
 
-with open(r'c:\Users\Usuario\Desktop\contas mensais\app\real_data.json', 'r', encoding='utf-8') as f:
+with open(r'c:\Users\Usuario\Desktop\contas mensais\real_data.json', 'r', encoding='utf-8') as f:
     real_data = f.read()
 
 js_script = f"""
@@ -327,7 +327,7 @@ js_script = f"""
 </html>
 """
 
-with codecs.open(r'c:\Users\Usuario\Desktop\contas mensais\app\index.html', 'w', 'utf-8') as f:
+with codecs.open(r'c:\Users\Usuario\Desktop\contas mensais\index.html', 'w', 'utf-8') as f:
     f.write(html_top + js_script)
 
 print("Build Complete.")
